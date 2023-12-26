@@ -27,13 +27,18 @@ for address in tqdm(addresses, ncols=70):
         'address': address.lower(),
     }
     try:
-        response = requests.get('https://starkrocket.xyz/api/check_wallet', params=params, headers=headers)
-        if response.json()['result']['points']:
-            point = int(response.json()['result']['points'])
-            total_point+=point
-
-            with open('wallets_with_drop.txt', 'a') as output:
-                print(f"{address}: {point}", file=output)
+        attempt = 0
+        point = 0
+        while attempt < 10 and point == 0:
+            response = requests.get('https://starkrocket.xyz/api/check_wallet', params=params, headers=headers)
+            if response.json()['result']['points']:
+                point = int(response.json()['result']['points'])
+                total_point += point
+            else:
+                time.sleep(3)
+                attempt += 1
+        with open('wallets_with_drop.txt', 'a') as output:
+            print(f"{address}: {point}", file=output)
     except:
         pass
     time.sleep(2)
