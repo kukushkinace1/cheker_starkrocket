@@ -37,7 +37,7 @@ for address in tqdm(addresses, ncols=70):
             else:
                 time.sleep(3)
                 attempt += 1
-        with open('wallets_with_drop.txt', 'a') as output:
+        with open('stats.txt', 'a') as output:
             print(f"{address}: {point}", file=output)
     except:
         pass
